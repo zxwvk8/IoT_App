@@ -24,6 +24,10 @@
         <activity
             android:name=".Graph1Activity"
             android:label="@string/title_activity_graph1"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Graph2Activity"
+            android:label="@string/title_activity_graph2"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -3,18 +3,19 @@ package com.page.a4.iot_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.view.View;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
+
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -24,19 +25,19 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
-public class Graph1Activity extends AppCompatActivity
+
+public class Graph2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static String recieveText= MainActivity.recieveText.getText().toString();
+    public static String recieveText;
     public static String str[] = new String[10];
 
     ArrayList<Entry> entries = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_graph1);
+        setContentView(R.layout.activity_graph2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -58,6 +59,7 @@ public class Graph1Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         /////////////////////////////////////////////////////////////////////////////////
         //그래프
 
@@ -66,6 +68,7 @@ public class Graph1Activity extends AppCompatActivity
 
         //MyClientTask myClientTask = new MyClientTask(MainActivity.editTextAddress.getText().toString(), Integer.valueOf(MainActivity.editTextPort.getText().toString()), MainActivity.messageText.getText().toString());
         //myClientTask.execute();
+        recieveText = MainActivity.recieveText.getText().toString();
 
         str = recieveText.split("#");
 
@@ -78,7 +81,7 @@ public class Graph1Activity extends AppCompatActivity
         //코드
 
         for(int i=0; i<str.length ; i++){
-            entries.add(new Entry(10f+ Integer.valueOf(str[i]), i));
+            entries.add(new Entry(10f+ Float.valueOf(str[i]), i));
         }
 
 
@@ -144,9 +147,8 @@ public class Graph1Activity extends AppCompatActivity
 
 
 
+
     }
-
-
 
     @Override
     public void onBackPressed() {
@@ -161,7 +163,7 @@ public class Graph1Activity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.graph1, menu);
+        getMenuInflater().inflate(R.menu.graph2, menu);
         return true;
     }
 
@@ -193,15 +195,14 @@ public class Graph1Activity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
 
-
         } else if (id == R.id.nav_voltGraph) {
-            Toast.makeText(this, "현재화면 입니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), Graph1Activity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_voltTemp) {
 
         } else if (id == R.id.nav_dustGraph) {
-            Intent intent = new Intent(getApplicationContext(), Graph2Activity.class);
-            startActivity(intent);
+            Toast.makeText(this, "현재화면 입니다.", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_dustTemp) {
 

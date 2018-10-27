@@ -9,5 +9,16 @@
     <string name="title_activity_graph1">Graph1Activity</string>
     <string name="connect">연결</string>
     <string name="server_IP">192.168.0.</string>
-    <string name="Main_message">RA#</string>
+
+    <string name="main_sendMessage">RA#</string>
+    <string name="volt_sendMessage">RA0#</string>
+    <string name="dust_sendMessage">RA1#</string>
+
+    <string name="main_activity">메인화면</string>
+    <string name="volt_graph">전류센서 그래프</string>
+    <string name="volt_temp">전류센서 임시</string>
+    <string name="dust_graph">미세먼지 그래프</string>
+    <string name="dust_temp">미세먼지 임시</string>
+    <string name="title_activity_graph2">Graph2Activity</string>
+
 </resources>

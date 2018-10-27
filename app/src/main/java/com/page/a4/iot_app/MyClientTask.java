@@ -26,7 +26,8 @@ public class MyClientTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... arg0) {
 
         Socket socket = null;
-        myMessage = myMessage.toString();
+        response = "";
+        //myMessage = myMessage.toString();
         try {
             socket = new Socket(dstAddress, dstPort);
             //송신

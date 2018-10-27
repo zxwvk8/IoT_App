@@ -3,6 +3,8 @@ package com.page.a4.iot_app;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -11,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,8 +28,10 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static TextView recieveText;
-    public static EditText editTextAddress, editTextPort, messageText;
+    public static EditText editTextAddress, editTextPort; //messageText;
     public static Button connectBtn, clearBtn;
+    public static Button open_voltGraph, open_voltTemp,
+                        open_dustGraph, open_dustTemp;
 
     Socket socket = null;
 
@@ -47,6 +52,12 @@ public class MainActivity extends AppCompatActivity
     SQLiteDatabase sqlitedb;
     DBManager dbmanager;
 
+
+    Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {  // 실행이 끝난후 확인 가능
+
+        }
+    };
 
 
 
@@ -93,18 +104,38 @@ public class MainActivity extends AppCompatActivity
         editTextAddress = (EditText) findViewById(R.id.addressText);
         editTextPort = (EditText) findViewById(R.id.portText);
         recieveText = (TextView) findViewById(R.id.textViewReciev);
-        messageText = (EditText) findViewById(R.id.messageText);
+        //messageText = (EditText) findViewById(R.id.messageText);
+        open_voltGraph = (Button)findViewById(R.id.button_volt_graph);
+        open_dustGraph = (Button)findViewById(R.id.button_dust_graph);
+
 
         //connect 버튼 클릭
         connectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyClientTask myClientTask = new MyClientTask(editTextAddress.getText().toString(), Integer.parseInt(editTextPort.getText().toString()), messageText.getText().toString());
+                //RA0# 송신
+
+                recieveText.setText("");
+                final String str = (String)getText(R.string.main_sendMessage);
+
+                MyClientTask myClientTask = new MyClientTask(editTextAddress.getText().toString(), Integer.parseInt(editTextPort.getText().toString()), str);
                 myClientTask.execute();
                 //messageText.setText("");
                 //messageText.getText();
-                Toast.makeText(MainActivity.this, messageText.getText(), Toast.LENGTH_SHORT).show();
+
+                new Handler().postDelayed(new Runnable() {// 1 초 후에 실행
+                    @Override
+                    public void run() {
+                        // 실행할 동작 코딩
+
+                        Toast.makeText(MainActivity.this, "연결테스트\n송신:" + str + "\n수신:" + recieveText.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                        mHandler.sendEmptyMessage(0); // 실행이 끝난후 알림
+                    }
+                }, 1000);
+
             }
+
         });
 
         //clear 버튼 클릭
@@ -112,7 +143,84 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 recieveText.setText("");
-                messageText.setText("");
+                //messageText.setText("");
+            }
+        });
+
+
+        open_voltGraph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recieveText.setText("");
+                //RA1# 송신
+                final String str = (String)getText(R.string.volt_sendMessage);
+
+                //통신
+                MyClientTask myClientTask = new MyClientTask(editTextAddress.getText().toString(), Integer.parseInt(editTextPort.getText().toString()), str);
+                myClientTask.execute();
+                //messageText.setText("");
+                //messageText.getText();
+
+
+
+
+
+                new Handler().postDelayed(new Runnable() {// 1 초 후에 실행
+                    @Override
+                    public void run() {
+                        // 실행할 동작 코딩
+                        Toast.makeText(MainActivity.this, "연결테스트\n송신:" + str +"\n수신:" + recieveText.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                        if(recieveText.getText().toString().length() >= 1){
+                            //통신 후 그래프액티비티화면이동
+                            Intent intent = new Intent(MainActivity.this, Graph1Activity.class);
+                            startActivity(intent);
+                        }
+
+
+                        mHandler.sendEmptyMessage(0); // 실행이 끝난후 알림
+                    }
+                }, 1000);
+
+
+
+
+
+
+
+            }
+        });
+
+        open_dustGraph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recieveText.setText("");
+                //RA2# 송신
+                final String str = (String) getText(R.string.dust_sendMessage);
+
+                //통신
+                MyClientTask myClientTask = new MyClientTask(editTextAddress.getText().toString(), Integer.parseInt(editTextPort.getText().toString()), str);
+                myClientTask.execute();
+                //messageText.setText("");
+                //messageText.getText();
+
+
+                new Handler().postDelayed(new Runnable() {// 1 초 후에 실행
+                    @Override
+                    public void run() {
+
+                        Toast.makeText(MainActivity.this, "연결테스트\n송신:" + str + "\n수신:" + recieveText.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                        if (recieveText.getText().toString().length() >= 1) {
+                            //통신 후 그래프액티비티화면이동
+                            Intent intent = new Intent(MainActivity.this, Graph2Activity.class);
+                            startActivity(intent);
+                        }
+
+                        mHandler.sendEmptyMessage(0); // 실행이 끝난후 알림
+                    }
+                }, 1000);
+
             }
         });
     }
@@ -161,18 +269,23 @@ public class MainActivity extends AppCompatActivity
         //        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_main) {
             // Handle the camera action
+            //Intent intent = new Intent(MainActivity.this, Graph1Activity.class);
+            //startActivity(intent);
+            Toast.makeText(this, "현재화면 입니다.", Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(MainActivity.this, Graph1Activity.class);
+        } else if (id == R.id.nav_voltGraph) {
+            Intent intent = new Intent(getApplicationContext(), Graph1Activity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_voltTemp) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_dustGraph) {
+            Intent intent = new Intent(getApplicationContext(), Graph2Activity.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_dustTemp) {
 
         } else if (id == R.id.nav_send) {
 
