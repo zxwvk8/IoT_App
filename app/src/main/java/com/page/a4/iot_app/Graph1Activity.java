@@ -1,8 +1,8 @@
 package com.page.a4.iot_app;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -11,52 +11,34 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.Socket;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
-public class MainActivity extends AppCompatActivity
+import java.util.ArrayList;
+
+public class Graph1Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static TextView recieveText;
-    public static EditText editTextAddress, editTextPort, messageText;
-    public static Button connectBtn, clearBtn;
+    public static String recieveText= MainActivity.recieveText.getText().toString();
+    public static String str[] = new String[10];
 
-    Socket socket = null;
+    ArrayList<Entry> entries = new ArrayList<>();
 
-    String array[] = new String[10];
-
-
-    ///////////////////////////////////////////////////
-    // DB관련
-    String str_id = "";
-    String str_password = "";
-    String str_name = "";
-    String str_gender = "";
-    String str_post = "";
-
-
-
-
-    SQLiteDatabase sqlitedb;
-    DBManager dbmanager;
-
-
-
-
-
-/////////////////////////////////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_graph1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -78,8 +60,79 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //앱 기본 스타일 설정
-        getSupportActionBar().setElevation(0);
+        LineChart lineChart = (LineChart) findViewById(R.id.chart);
+
+        MyClientTask myClientTask = new MyClientTask(MainActivity.editTextAddress.getText().toString(), Integer.valueOf(MainActivity.editTextPort.getText().toString()), MainActivity.messageText.getText().toString());
+        myClientTask.execute();
+
+        str = recieveText.split("#");
+
+
+        Log.d("그래프", recieveText);
+
+
+
+        //------------------------------------------------------------------------------------------
+        //코드
+
+        for(int i=0; i<str.length ; i++){
+            entries.add(new Entry(10f+ Integer.valueOf(str[i]), i));
+        }
+
+
+
+        //-----------------실제 값 ArrayList /높이/
+        /*
+
+        for(int i=0; i< ; i++){
+            entries.add(new Entry(10f+i, i));
+        }
+
+
+        entries.add(new Entry(4f, 0));
+        entries.add(new Entry(8f, 1));
+        entries.add(new Entry(6f, 2));
+        entries.add(new Entry(2f, 3));
+        entries.add(new Entry(18f, 4));
+        entries.add(new Entry(9f, 5));
+        entries.add(new Entry(16f, 6));
+        entries.add(new Entry(5f, 7));
+        entries.add(new Entry(3f, 8));
+        entries.add(new Entry(7f, 10));
+        entries.add(new Entry(9f, 11));
+        */
+
+        LineDataSet dataset = new LineDataSet(entries, "# of Calls");
+
+        //-------------------상단축 리스트  /상단가로/
+        ArrayList<String> labels = new ArrayList<String>();
+
+
+        for(int i = 0; i<str.length ; i++){
+            labels.add((i+1) + "일");
+
+        }
+        /*
+
+
+        labels.add("5월");
+        labels.add("6월");
+        labels.add("7월");
+        labels.add("8월");
+        labels.add("9월");
+        labels.add("10월");
+        labels.add("11월");
+        labels.add("12월");
+        */
+
+        LineData data = new LineData(labels, dataset);
+
+        dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
+        /*dataset.setDrawCubic(true); //선 둥글게 만들기
+        dataset.setDrawFilled(true); //그래프 밑부분 색칠*/
+
+        lineChart.setData(data);
+        lineChart.animateY(5000);
 
 
 
@@ -88,36 +141,8 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        connectBtn = (Button) findViewById(R.id.buttonConnect);
-        clearBtn = (Button) findViewById(R.id.buttonClear);
-        editTextAddress = (EditText) findViewById(R.id.addressText);
-        editTextPort = (EditText) findViewById(R.id.portText);
-        recieveText = (TextView) findViewById(R.id.textViewReciev);
-        messageText = (EditText) findViewById(R.id.messageText);
 
-        //connect 버튼 클릭
-        connectBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyClientTask myClientTask = new MyClientTask(editTextAddress.getText().toString(), Integer.parseInt(editTextPort.getText().toString()), messageText.getText().toString());
-                myClientTask.execute();
-                //messageText.setText("");
-                //messageText.getText();
-                Toast.makeText(MainActivity.this, messageText.getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        //clear 버튼 클릭
-        clearBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recieveText.setText("");
-                messageText.setText("");
-            }
-        });
     }
-
-    //
 
 
 
@@ -134,7 +159,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.graph1, menu);
         return true;
     }
 
@@ -147,8 +172,6 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-
-
             return true;
         }
 
@@ -158,15 +181,15 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        //        // Handle navigation view item clicks here.
+        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-
-        } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(MainActivity.this, Graph1Activity.class);
+            Intent intent = new Intent(Graph1Activity.this, MainActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_gallery) {
+
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -182,5 +205,4 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }
