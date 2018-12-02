@@ -29,6 +29,13 @@
             android:name=".Graph2Activity"
             android:label="@string/title_activity_graph2"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+       <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="8bf45f003cf99c98ff08b99697f2020334615d09" />
+        <meta-data android:name="android.max_aspect" android:value="2.1" />
+
+
     </application>
 
 </manifest>

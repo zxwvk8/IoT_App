@@ -2,23 +2,38 @@
     <string name="app_name">IoT_App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">A4 Team</string>
+    <string name="nav_header_subtitle">대전대학교 컴퓨터공학과</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_graph1">Graph1Activity</string>
     <string name="connect">연결</string>
     <string name="server_IP">192.168.0.</string>
 
-    <string name="main_sendMessage">RA#</string>
-    <string name="volt_sendMessage">RA0#</string>
-    <string name="dust_sendMessage">RA1#</string>
+    <string name="main_sendMessage_1m">RA0#</string>
+
+    <string name="volt_sendMessage_1m">RA0#</string>
+    <string name="volt_sendMessage_10m">RA0#10m#</string>
+    <string name="volt_sendMessage_30m">RA0#30m#</string>
+    <string name="volt_sendMessage_60m">RA0#60m#</string>
+
+
+    <string name="dust_sendMessage_1m">RA1#</string>
+    <string name="dust_sendMessage_10m">RA1#10m#</string>
+    <string name="dust_sendMessage_30m">RA1#30m#</string>
+    <string name="dust_sendMessage_60m">RA1#60m#</string>
 
     <string name="main_activity">메인화면</string>
     <string name="volt_graph">전류센서 그래프</string>
     <string name="volt_temp">전류센서 임시</string>
     <string name="dust_graph">미세먼지 그래프</string>
     <string name="dust_temp">미세먼지 임시</string>
+    <string name="airCleaner_">공기청정기</string>
+
+
+
+
     <string name="title_activity_graph2">Graph2Activity</string>
+
 
 </resources>

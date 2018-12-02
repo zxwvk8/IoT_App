@@ -1,23 +1,27 @@
 package com.page.a4.iot_app;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -31,6 +35,8 @@ public class Graph2Activity extends AppCompatActivity
 
     public static String recieveText;
     public static String str[] = new String[10];
+
+
 
     ArrayList<Entry> entries = new ArrayList<>();
 
@@ -80,9 +86,22 @@ public class Graph2Activity extends AppCompatActivity
         //------------------------------------------------------------------------------------------
         //코드
 
-        for(int i=0; i<str.length ; i++){
-            entries.add(new Entry(10f+ Float.valueOf(str[i]), i));
+        if(str.length>10){
+            int j=0;
+            for(int i=9; i>=0 ; i--){
+
+                entries.add(new Entry(Float.valueOf(str[i]), j));
+                j++;
+            }
+        }else{
+            int j=0;
+            for(int i=str.length; i>=0 ; i--){
+
+                entries.add(new Entry(Float.valueOf(str[i]), j));
+                j++;
+            }
         }
+
 
 
 
@@ -113,10 +132,15 @@ public class Graph2Activity extends AppCompatActivity
         ArrayList<String> labels = new ArrayList<String>();
 
 
-        for(int i = 0; i<str.length ; i++){
-            labels.add((i+1) + "일");
-
+        for(int i=45; i>=0; ){
+            labels.add(i+"");
+            i = i - 5;
         }
+
+
+
+
+
         /*
 
 
@@ -130,14 +154,24 @@ public class Graph2Activity extends AppCompatActivity
         labels.add("12월");
         */
 
+        dataset.setAxisDependency(YAxis.AxisDependency.RIGHT);            // Axis를 YAxis의 RIGHT를 기본으로 설정
+        dataset.setColor(ColorTemplate.getHoloBlue());                    // 데이터의 라인색을 HoloBlue로 설정
+        dataset.setCircleColor(Color.BLACK);                            // 데이터의 점을 WHITE로 설정
+        dataset.setLineWidth(2f);                                        // 라인의 두께를 2f로 설정
+        dataset.setFillAlpha(65);                                        // 투명도 채우기를 65로 설정
+        dataset.setHighLightColor(Color.rgb(244, 117, 117));
+        dataset.setValueTextSize(12f);
+
         LineData data = new LineData(labels, dataset);
 
-        dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
-        /*dataset.setDrawCubic(true); //선 둥글게 만들기
-        dataset.setDrawFilled(true); //그래프 밑부분 색칠*/
+        //dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
+        dataset.setDrawCubic(true); //선 둥글게 만들기
+        dataset.setDrawFilled(true); //그래프 밑부분 색칠
+        //dataset.setLineWidth(5f);                                        // 라인의 두께를 2f로 설정
+        //dataset.setFillAlpha(1);
 
         lineChart.setData(data);
-        lineChart.animateY(5000);
+        lineChart.animateY(2500);
 
 
 
@@ -196,17 +230,18 @@ public class Graph2Activity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_voltGraph) {
+
+            Toast.makeText(this, "메인화면에서 그래프 버튼을 눌러 새로운 데이터값을 받으세요", Toast.LENGTH_SHORT).show();
+            /*
             Intent intent = new Intent(getApplicationContext(), Graph1Activity.class);
             startActivity(intent);
+            */
 
-        } else if (id == R.id.nav_voltTemp) {
 
         } else if (id == R.id.nav_dustGraph) {
             Toast.makeText(this, "현재화면 입니다.", Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.nav_dustTemp) {
 
-        } else if (id == R.id.nav_send) {
 
         }
 

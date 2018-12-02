@@ -9,35 +9,26 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/main_activity" />
 
-        <item
-            android:id="@+id/nav_voltGraph"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/volt_graph" />
-        <item
-            android:id="@+id/nav_voltTemp"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/volt_temp" />
-        <item
-            android:id="@+id/nav_dustGraph"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/dust_graph" />
-        <item
-            android:id="@+id/nav_dustTemp"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/dust_temp" />
+
+
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Graph">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/nav_voltGraph"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="@string/volt_graph" />
+
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_dustGraph"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/dust_graph" />
         </menu>
     </item>
+
+
+
+
 
 </menu>
